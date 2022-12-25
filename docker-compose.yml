@@ -1,0 +1,34 @@
+version: '3.9'
+services:
+  coredns:
+    image: coredns/coredns
+    ports:
+      - 53:53/udp
+      - 9153:9153
+    volumes:
+      - ./root:/root
+    command: -conf /root/Corefile
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    depends_on:
+      - coredns
+
+  graphana:
+    image: grafana/grafana-oss
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+volumes:
+  grafana-data:
+  prometheus-data:

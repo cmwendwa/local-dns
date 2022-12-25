@@ -1,0 +1,13 @@
+.:53 {
+    forward . 8.8.8.8 9.9.9.9
+    prometheus 0.0.0.0:9153
+    log
+    errors
+}
+
+example.local:53 {
+    file /root/db.example
+    prometheus 0.0.0.0:9153
+    log
+    errors
+}
